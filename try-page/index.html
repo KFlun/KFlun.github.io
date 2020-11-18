@@ -1,0 +1,83 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="try page"><meta name="keywords" content="KFlun"><meta name="author" content="KFlun"><meta name="copyright" content="KFlun"><title>try page | KFlun</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  hexoVersion: '5.2.0'
+} </script><meta name="generator" content="Hexo 5.2.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="false"><div class="author-info"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">KFlun</div><div class="author-info__description text-center">KFlun blog</div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">4</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">4</span></a></div></div></div><nav class="no-bg" id="nav"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">KFlun</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right"></span></div><div id="site-info"><div id="site-title">KFlun</div><div id="site-sub-title">BE WILD</div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><article id="page"><h1>try page</h1><div class="article-container"><h1 id="一、在终端使用代理"><a href="#一、在终端使用代理" class="headerlink" title="一、在终端使用代理"></a>一、在终端使用代理</h1><h2 id="方法一、临时有效"><a href="#方法一、临时有效" class="headerlink" title="方法一、临时有效"></a>方法一、临时有效</h2><p>Mac在打开VPN后，如果通过terminal执行下载任务，仍然需要开启VPN。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$export</span> http_proxy=http://proxyAddress:port</span><br></pre></td></tr></table></figure>
+
+<p>vpn工具联网成功后，在terminal上执行上述命令，则可使得terminal通过vpn联网。<br>该方法临时有效，退出终端后失效。如果希望保持一直有效，可将上述命令添加到~/.bashrc等启动配置文件中。</p>
+<h2 id="方法二、在-zshrc中配置"><a href="#方法二、在-zshrc中配置" class="headerlink" title="方法二、在~/.zshrc中配置"></a>方法二、在~/.zshrc中配置</h2><ol>
+<li><p>找到代理地址和端口</p>
+<p>我使用的是ShadowsocksX-NG，点击图标，选择「高级模式」(Advance Preference)，看到Socks5的监听地址和端口：</p>
+<p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/Local%20socks.png" alt="Local socks"></p>
+</li>
+<li><p>打开终端添加配置</p>
+<p>打开终端，输入以下代码打开vim（我终端的shell命令解释器是zsh）:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.zshrc   <span class="comment">#zsh默认的配置文件在这里面：~/.zshrc</span></span><br></pre></td></tr></table></figure>
+
+<p>按下键盘上的字母「i」，进入编辑模式，输入以下代码，第二行末尾改成自己的代理地址和端口：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># proxy list</span></span><br><span class="line"><span class="built_in">alias</span> proxy=<span class="string">&#x27;export all_proxy=socks5://127.0.0.1:1086&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> unproxy=<span class="string">&#x27;unset all_proxy&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>按下键盘上的「esc」，退出编辑模式。输入以下代码保存修改并退出vim：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:wq</span><br></pre></td></tr></table></figure>
+
+<p>初始化配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>执行</p>
+<p>在终端开启代理模式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy</span><br></pre></td></tr></table></figure>
+
+<p>关闭代理模式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unproxy</span><br></pre></td></tr></table></figure>
+
+<p>开启代理模式前后查看ip：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl cip.cc</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h1 id="二、安装HomeBrew"><a href="#二、安装HomeBrew" class="headerlink" title="二、安装HomeBrew"></a>二、安装HomeBrew</h1><ol>
+<li><p>按照上述方法，终端打开代理</p>
+</li>
+<li><p>在终端输入以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/bin/bash -c <span class="string">&quot;<span class="subst">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)</span>&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>检验是否安装成功</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew -v</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/check%20homebrew.png" alt="check homebrew"></p>
+<h1 id="三、在Clion中配置openCV（macOS-Big-Sur暂时有些问题）"><a href="#三、在Clion中配置openCV（macOS-Big-Sur暂时有些问题）" class="headerlink" title="三、在Clion中配置openCV（macOS Big Sur暂时有些问题）"></a>三、在Clion中配置openCV（<strong>macOS Big Sur暂时有些问题</strong>）</h1><p>如果你的系统版本在此时是macOS Big Sur，那么此方法将不适用。</p>
+<ol>
+<li><p>首先用Homebrew安装opencv</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew install opencv   <span class="comment">#默认安装最新版本</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ brew install opencv@3    <span class="comment">#指定版本openCV3</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装完毕后，在Clion中配置CMakeLists.txt文件</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.9</span>)</span><br><span class="line"><span class="keyword">project</span>(untitled1)</span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span>(CMAKE_CXX_STANDARD <span class="number">11</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#find_library(OpenCV)</span></span><br><span class="line"><span class="keyword">find_package</span>(OpenCV)</span><br><span class="line"></span><br><span class="line"><span class="keyword">include_directories</span>(<span class="variable">$&#123;OpenCV_INCLUDE_DIRS&#125;</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_CXX_STANDARD <span class="number">11</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(untitled1 main.cpp)</span><br><span class="line"></span><br><span class="line"><span class="keyword">target_link_libraries</span>(untitled1 <span class="variable">$&#123;OpenCV_LIBS&#125;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后就可以写个demo验证一下了：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;opencv2/opencv.hpp&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> cv;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Mat srcImage = imread(<span class="string">&quot;your_img_path.jpg&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (!srcImage.data) &#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Image not loaded&quot;</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    imshow(<span class="string">&quot;[img]&quot;</span>, srcImage);</span><br><span class="line">    waitKey(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><p><a target="_blank" rel="noopener" href="https://gaoryrt.com/2015/09-28-%E5%BC%80%E5%A7%8Bzsh-vim/">开始 Zsh + Vim + iTerm</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.im/post/6844904001251573773">mac终端bash、zsh、oh-my-zsh最实用教程</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/124897287">Mac 终端走 Socks5 代理方法</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/TH_NUM/article/details/87887115">Mac CLion配置OpenCV环境</a></p>
+<p>[Homebrew官网](</p>
+</div></article><nav id="pagination"><div class="pagination"></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2020 By KFlun</div><div class="framework-info"><span>驱动 - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>
