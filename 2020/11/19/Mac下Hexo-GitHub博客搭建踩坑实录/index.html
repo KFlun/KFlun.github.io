@@ -26,7 +26,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: categories</span><br><span class="line">date: 2018-01-05 00:00:00</span><br><span class="line"><span class="built_in">type</span>: <span class="string">&quot;categories&quot;</span></span><br><span class="line">---</span><br></pre></td></tr></table></figure>
 
 <p>在按照文档进行配置的时候，一直无法通过，报错如下：</p>
-<p><img src="https://https//kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/YAML_fault.png" alt="image-20201119072421286"></p>
+<p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/YAML_fault.png" alt="image-20201119072421286"></p>
 <p>在查询YAML相关语法后，我判断应该是<strong>“—”</strong>符号的问题，但是确实这里也没有使用错误，所以在左右修改都不正确的情况下，最后的解决方案是直接删除了该符号，改动如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">title: tags</span><br><span class="line">date: 2018-01-05 00:00:00</span><br><span class="line"><span class="built_in">type</span>: <span class="string">&quot;tags&quot;</span></span><br></pre></td></tr></table></figure>
 
