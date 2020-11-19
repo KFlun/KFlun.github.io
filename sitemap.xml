@@ -2,16 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://kflun.com/2020/11/18/Mac%E7%BB%88%E7%AB%AF%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86%EF%BC%8C%E5%B9%B6%E7%94%A8HomeBrew%E5%9C%A8Clion%E4%B8%AD%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEopenCV/</loc>
+    <loc>https://kflun.com/2020/11/19/Mac%E4%B8%8BHexo-GitHub%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E8%B8%A9%E5%9D%91%E5%AE%9E%E5%BD%95/</loc>
     
     <lastmod>2020-11-19</lastmod>
     
   </url>
   
   <url>
-    <loc>https://kflun.com/2020/11/19/Mac%E4%B8%8BHexo-GitHub%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E8%B8%A9%E5%9D%91%E5%AE%9E%E5%BD%95/</loc>
+    <loc>https://kflun.com/2020/11/18/Mac%E7%BB%88%E7%AB%AF%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86%EF%BC%8C%E5%B9%B6%E7%94%A8HomeBrew%E5%9C%A8Clion%E4%B8%AD%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEopenCV/</loc>
     
-    <lastmod>2020-11-18</lastmod>
+    <lastmod>2020-11-19</lastmod>
     
   </url>
   
@@ -60,6 +60,13 @@
 
   
   <url>
+    <loc>https://kflun.com/tags/Blog/</loc>
+    <lastmod>2020-11-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://kflun.com/tags/Mac/</loc>
     <lastmod>2020-11-19</lastmod>
     <changefreq>daily</changefreq>
@@ -68,13 +75,6 @@
   
   <url>
     <loc>https://kflun.com/tags/openCV/</loc>
-    <lastmod>2020-11-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://kflun.com/tags/Blog/</loc>
     <lastmod>2020-11-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
