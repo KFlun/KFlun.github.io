@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://kflun.com/2020/11/25/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4-HDR-%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-2020-11-25/</loc>
+    
+    <lastmod>2020-11-26</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://kflun.com/2020/11/19/Mac%E4%B8%8BHexo-GitHub%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E8%B8%A9%E5%9D%91%E5%AE%9E%E5%BD%95/</loc>
     
     <lastmod>2020-11-19</lastmod>
@@ -53,7 +60,7 @@
 
   <url>
     <loc>https://kflun.com/</loc>
-    <lastmod>2020-11-19</lastmod>
+    <lastmod>2020-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -61,35 +68,42 @@
   
   <url>
     <loc>https://kflun.com/tags/Mac/</loc>
-    <lastmod>2020-11-19</lastmod>
+    <lastmod>2020-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://kflun.com/tags/openCV/</loc>
-    <lastmod>2020-11-19</lastmod>
+    <lastmod>2020-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://kflun.com/tags/Blog/</loc>
-    <lastmod>2020-11-19</lastmod>
+    <lastmod>2020-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://kflun.com/tags/%E9%9A%8F%E7%AC%94/</loc>
-    <lastmod>2020-11-19</lastmod>
+    <lastmod>2020-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://kflun.com/tags/%E5%BC%80%E5%A7%8B/</loc>
-    <lastmod>2020-11-19</lastmod>
+    <lastmod>2020-11-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kflun.com/tags/HDR/</loc>
+    <lastmod>2020-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -98,7 +112,14 @@
   
   <url>
     <loc>https://kflun.com/categories/%E5%B7%A5%E7%A8%8B%E5%BC%80%E5%8F%91/</loc>
-    <lastmod>2020-11-19</lastmod>
+    <lastmod>2020-11-26</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kflun.com/categories/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</loc>
+    <lastmod>2020-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>

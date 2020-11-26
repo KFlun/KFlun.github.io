@@ -1,0 +1,151 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="高动态范围(HDR)算法学习笔记(一)"><meta name="keywords" content="HDR"><meta name="author" content="KFlun"><meta name="copyright" content="KFlun"><title>高动态范围(HDR)算法学习笔记(一) | KFlun</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  hexoVersion: '5.2.0'
+} </script><meta name="generator" content="Hexo 5.2.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-HDR%E6%95%B4%E4%BD%93%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">1. HDR整体技术路线介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-%E8%83%8C%E6%99%AF%E6%A6%82%E8%BF%B0"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 背景概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-%E6%8A%80%E6%9C%AF%E6%A1%86%E6%9E%B6"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 技术框架</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E8%89%B2%E8%B0%83%E6%98%A0%E5%B0%84-Tone-mapping"><span class="toc-number">3.</span> <span class="toc-text">2. 色调映射(Tone-mapping)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-%E4%BB%8B%E7%BB%8D"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-Center-Surround-Retinex%E7%90%86%E8%AE%BA"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 Center&#x2F;Surround Retinex理论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-%E4%BD%9C%E8%80%85%E6%8F%90%E5%87%BA%E7%9A%84%E5%9F%BA%E4%BA%8ERetinex%E7%90%86%E8%AE%BA%E7%9A%84tone-mapping%E7%AE%97%E6%B3%95"><span class="toc-number">3.3.</span> <span class="toc-text">2.3 作者提出的基于Retinex理论的tone mapping算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#A-Global-Adaptation"><span class="toc-number">3.3.1.</span> <span class="toc-text">A. Global Adaptation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#B-Local-Adaptation"><span class="toc-number">3.3.2.</span> <span class="toc-text">B. Local Adaptation</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90-amp-%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">3.4.</span> <span class="toc-text">2.4 代码分析&amp;实验结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-5-%E6%80%BB%E7%BB%93"><span class="toc-number">3.5.</span> <span class="toc-text">2.5 总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E6%9B%9D%E5%85%89%E8%9E%8D%E5%90%88-Exposure-Fusion"><span class="toc-number">4.</span> <span class="toc-text">3.曝光融合(Exposure Fusion)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E5%8E%BB%E9%AC%BC%E5%BD%B1-Deghosting"><span class="toc-number">5.</span> <span class="toc-text">4.去鬼影(Deghosting)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-%E6%A6%82%E8%BF%B0"><span class="toc-number">5.1.</span> <span class="toc-text">4.1 概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-Motion-free-exposure-fusion-based-on-inter-consistency-and-intra-consistency"><span class="toc-number">5.2.</span> <span class="toc-text">4.2 Motion-free exposure fusion based on inter-consistency and intra-consistency</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-%E6%80%BB%E7%BB%93"><span class="toc-number">5.3.</span> <span class="toc-text">4.3 总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E8%A7%84%E5%88%92"><span class="toc-number">6.</span> <span class="toc-text">5. 规划</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE%EF%BC%9A"><span class="toc-number">7.</span> <span class="toc-text">参考文献：</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">KFlun</div><div class="author-info__description text-center">KFlun blog</div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">6</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">6</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">2</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/76d90db83oa01e9ae7e782a1d67cbee1.JPEG)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">KFlun</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title">高动态范围(HDR)算法学习笔记(一)</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> created 2020-11-25<span class="post-meta__separator">|</span><i class="fa fa-calendar-check-o" aria-hidden="true"></i> updated 2020-11-27</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/">图像处理</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>高动态范围成像（HDR）技术，简单来说就是使得一张图像中能够同时呈现最亮到最暗的亮度范围更大。在自然界中往往存在动态范围极大的场景，例如：树荫中的物体和阳光本身；车辆出隧道时，隧道内外；室内窗外的场景和窗内……现有的摄像技术在捕捉这些场景的时候，动态范围往往不能做到如人眼一般高，导致的结果就是画面整体的曝光不均匀：使得高亮物体能呈现时，周围往往一片漆黑；使得较低亮度的物体能呈现时，高亮部分又会曝光过度。这样往往会导致真实场景中大量的细节丢失。本文将会总结在这段时间学习的过程当中对HDR技术整体框架的认知，以及对其中几项关键技术：鬼影去除(deghosting)、色调映射(tone mapping)、曝光融合(exposure Fusion)的学习心得。在对各项技术进行说明的时候，将会详细叙述1. “Adaptive Local Tone Mapping Based on Retinex for High Dynamic Range Images” 2. “Motion-free exposure fusion based on inter-consistency and intra-consistency” 两篇论文。两篇论文分别属于在tone-mapping和deghosting领域较为常用的方法。</p>
+<h1 id="1-HDR整体技术路线介绍"><a href="#1-HDR整体技术路线介绍" class="headerlink" title="1. HDR整体技术路线介绍"></a>1. HDR整体技术路线介绍</h1><h2 id="1-1-背景概述"><a href="#1-1-背景概述" class="headerlink" title="1.1 背景概述"></a>1.1 背景概述</h2><p>最初，得到HDR图像的过程较为复杂，需要专业设备，专业摄影师，故HDR技术只是被用于专业摄影领域。近年，随着手机等移动设备摄像功能的普及，HDR功能也逐渐被大众需要，是否能很好的适应高动态场景成为了衡量一款手机摄像功能及其关键的指标之一。而在物联网的发展和普及过程当中，各个边缘端设备更是对图像处理技术提出了“高实时性”的要求，典型的案例就是自动驾驶的车载摄像头：高速移动的场景，高安全性要求，复杂的路面情况……这些特性都要求作为自动驾驶汽车的摄像头要拥有极高的实时性。而对于HDR技术而言：如何实时地合成一张没有鬼影、色彩自然美观、动态范围高的图像就是现在最需要解决的问题。</p>
+<h2 id="1-2-技术框架"><a href="#1-2-技术框架" class="headerlink" title="1.2 技术框架"></a>1.2 技术框架</h2><p>随着HDR技术的不断发展，从硬件制造到软件算法，逐渐形成了一套技术框架，现在国内外所做的研究也基本是在这个大框架下发展，以下为我对HDR技术框架的总结：</p>
+<p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/HDR%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF.png" alt="HDR技术路线"></p>
+<p>可以看到，HDR的技术路线主要分为硬件和软件算法两种实现方式。</p>
+<p>硬件HDR主要在于提升CMOS等感光元件的感光能力，这方面Sony、OmniVision Technologies等公司做得最好，Sony在2018年提出了IMX490款CMOS，在2019年有样品生产，动态范围能达到120db；OmniVision在2020年发布的OX03C10传感器动态范围能达到140db（日常生活中大部分场景的动态范围为100db）。这方面不是现阶段学习的重点，所以只是大概了解。</p>
+<p>实际上，软件算法和硬件是一种相辅相成的实现方式。软件算法能在硬件的基础上进一步提升图像质量，同样，也需要好的硬件支撑。在算法实现方面，主要有两种路线：</p>
+<ol>
+<li>路线一：获得一张LDR图像，通过辐照度估计算法，转化为HDR图像。由于如今的主流显示器位6bit、8bit、10bit居多，都无法显示高位深的HDR图像（24bit及其以上），故在得到HDR图像之后，再进行tone mapping(即色调映射)处理最终得到包含高动态范围细节的LDR图像。</li>
+<li>路线二：获得一系列不同曝光的LDR图像，形成曝光图像栈，将图像栈中的图像进行配准，再进行融合，得到包含高动态范围细节的LDR图像。由于在现实生活中，我们往往无法得到场景背景完全一样、场景中物体没有位移的多张曝光图像，所以配准和去鬼影这两个步骤在路线二中显得尤其重要。</li>
+</ol>
+<h1 id="2-色调映射-Tone-mapping"><a href="#2-色调映射-Tone-mapping" class="headerlink" title="2. 色调映射(Tone-mapping)"></a>2. 色调映射(Tone-mapping)</h1><p>色调映射简单来说就是将高位深的HDR图像通过色调映射函数，映射为LDR图像。色调映射的运行机制即通过改变图像各部分的对比度来体现自然场景中各部分的亮暗差异，所以如何得到较为自然的色彩对比是色调映射算法的重点。</p>
+<p>关于Tone mapping的发展史可以参考<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/21983679">[1] Tone Mapping进化论</a>。</p>
+<p>这里主要讲解这段时间所看的一篇论文：<a target="_blank" rel="noopener" href="https://koasas.kaist.ac.kr/bitstream/10203/172985/1/73275.pdf">[2] Adaptive Local Tone Mapping Based on Retinex for High Dynamic Range Images</a>。代码可以点击<a target="_blank" rel="noopener" href="https://github.com/KFlun/OptimizedImageEnhance/tree/master/matlab/ALTMRetinex">[3] 这里</a>查看。</p>
+<p>作者将文章分为了几个板块：</p>
+<ol>
+<li><p>介绍</p>
+</li>
+<li><p>Center\Surround Retinex理论</p>
+</li>
+<li><p>提出基于Retinex理论的tone mapping算法。</p>
+<p>A. 全局适应</p>
+<p>B. 局部适应</p>
+</li>
+<li><p>实验结果</p>
+</li>
+<li><p>总结</p>
+</li>
+</ol>
+<h2 id="2-1-介绍"><a href="#2-1-介绍" class="headerlink" title="2.1 介绍"></a>2.1 介绍</h2><p>HDR图像可以通过辐照度估计的方式得到，但是无法在显示器上显示，假如通过线性映射的方式，将会丢失大量的细节。色调映射可分为全局适应和局部适应两种方式。</p>
+<p>全局适应：</p>
+<p>针对每张图像的每一个像素点都使用相同的色调映射函数，映射逻辑主要是构造一个函数，使得在提升暗部区域的亮度时，亮部区域的亮度能够保持不变。这样的全局算法只需要极低的计算复杂度，但是往往难以保留场景中每一个部分的细节。</p>
+<p>局部适应：</p>
+<p>局部适应算法会根据该像素与临近像素的关系选用不同的映射函数。作者介绍了一系列算法，这些算法普遍能够得到比全局适应更好的效果，但是有如下缺点：</p>
+<ol>
+<li>算法更加复杂，计算量较大。</li>
+<li>利用临近像素点关系区分选用的映射函数可能会造成光晕现象。</li>
+</ol>
+<p>那么这篇文章提出了基于center/surround retinex理论的局部色调映射算法，能够同时保留亮暗细节，且不会产生光晕。</p>
+<h2 id="2-2-Center-Surround-Retinex理论"><a href="#2-2-Center-Surround-Retinex理论" class="headerlink" title="2.2 Center/Surround Retinex理论"></a>2.2 Center/Surround Retinex理论</h2><p>Retinex理论是E. Land 和 J. McCann 在1971年提出的理论。Retinex的核心公式即：<br>$$<br>R_i(x,y)=logI_i(x,y)-log(F(x,y)^<em>I_i(x,y)) \tag{2-1}<br>$$<br>其中$x,y$代表像素点的坐标，$R_i(x,y)$为输出值，$I_i(x,y)$表示第$ i $处的图像信号值，$^</em>$ 为卷积运算，$F(x,y)$为高斯函数。其含义为去掉光照的影响，还原图像本身的模样。对Retinex的理解可以参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/lz0499/article/details/81154937">这里</a>。</p>
+<p>Retinex在发展过程中发展出了SSR、MSR、MSRCR的衍生理论。在文章中有提到相关公式，但是与后文牵扯不大，主要是对Retinex理论的补充说明，所以不展开说。（笔者自己还没细看……）</p>
+<h2 id="2-3-作者提出的基于Retinex理论的tone-mapping算法"><a href="#2-3-作者提出的基于Retinex理论的tone-mapping算法" class="headerlink" title="2.3 作者提出的基于Retinex理论的tone mapping算法"></a>2.3 作者提出的基于Retinex理论的tone mapping算法</h2><p>作者提出的算法流程总结如下：</p>
+<p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/tone%20mapping%E7%AE%97%E6%B3%95%E7%BB%93%E6%9E%84.png" alt="算法结构"></p>
+<h3 id="A-Global-Adaptation"><a href="#A-Global-Adaptation" class="headerlink" title="A. Global Adaptation"></a>A. Global Adaptation</h3><p>对每一个像素点用同一个映射函数进行处理：<br>$$<br>L_g(x,y)=\frac{log(L_w(x,y)/\bar{L_w}+1)}{log(L_{wmax}/\bar{L_w}+1)} \tag{2-2}<br>$$<br>其中，$L_g(x,y)$表示全局适应的输出，$L_w(x,y)$表示真实世界的亮度输入，$L_{wmax}$表示真实输入的最大值，$\bar{L_w}$表示输入亮度的对数平均数，公式如下：<br>$$<br>\bar{L_w}=exp(\frac{1}{N}\sum_{x,y}log(\delta+L_w(x,y))) \tag{2-3}<br>$$<br>其中，$N$是总的像素个数，$\delta$是避免奇点的极小数。当$\bar{L_w}$越大(越接近于$L_{wmax}$)时，公式$(2)$越接近于一个线性函数，因此$\bar{L_w}$大的场景，亮度提升较小，反之亮度提升较大。</p>
+<p>经过全局适应处理后的图像如下：</p>
+<p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/%E5%8E%9F%E5%9B%BE.png" alt="原图"><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/only%20global.jpg" alt="with global"></p>
+<p>注释：源文件为”xxx.hdr”文件。用Mac自带图像浏览器打开(可认为执行了自带的tone-mapping)。</p>
+<h3 id="B-Local-Adaptation"><a href="#B-Local-Adaptation" class="headerlink" title="B. Local Adaptation"></a>B. Local Adaptation</h3><p>局部适应基于Retinex理论，将Retinex理论中的高斯滤波换成了引导滤波，起到保持边缘的作用。引导滤波和双边滤波都能起到保持边缘的作用。第一步公式如下：<br>$$<br>L_l(x,y)=logL_g(x,y)-logH_g(x,y) \tag{2-4}<br>$$<br>其中，$H_g(x,y)$表示$L_g(x,y)$经过引导滤波处理后的输出，$L_l(x,y)$表示经过局部适应后的输出。<br>$$<br>H_g(x,y)=\frac{1}{｜\omega｜}\sum_{(\xi_x,\xi_y)\in\omega(x,y)}{(a(\xi_x,\xi_y)L_g(x,y)+b(\xi_x,\xi_y))} \tag{2-5}<br>$$<br>其中，$\omega(x,y)$是以像素点$(x,y)$为中心，$r$为半径的局部正方形窗口。$\xi_x,\xi_y$是选取的相邻坐标点，这两点在$\omega(x,y)$内。$｜\omega｜$表示在$\omega(x,y)$中的总像素个数。关于$a(\xi_x,\xi_y)$和$b(\xi_x,\xi_y)$的公式在文章中有给出。公式$(5)$是引导滤波的作用原理，在经过引导滤波处理后，有效消除了图像中的光晕。但是由于引导滤波对于边缘的保持作用(在亮度对比较大的区域会分配较少的权重)，$L_g(x,y)$的值和$H_g(x,y)$的值会很接近，使得总体的画面对比度降低了。所以作者又提出了两个影响因子：$\alpha$ (对比度增强因子)和$\beta$ (自适应非线性偏移因子)。<br>$$<br>\alpha(x,y)=1+\eta\frac{L_g(x,y)}{L_{gmax}} \tag{2-6}<br>$$</p>
+<p>$$<br>\beta=\lambda\bar{L_g} \tag{2-7}<br>$$</p>
+<p>其中的 $\eta$ 和 $\lambda$ 都是一个经验常数。通过将这两个影响因子带入到公式$(4)$中，得到最终的局部适应公式为：<br>$$<br>L_{out}(x,y)=\alpha(x,y)log(\frac{L_g(x,y)}{H_g(x,y)}+\beta) \tag{2-8}<br>$$<br>文章通过影响因子$\alpha$ 来提升画面整体的对比度，使得整体效果更好；通过影响因子$\beta$ 来得到对于不同场景适用的对数函数，也就是实现场景自适应的效果。对于公式$(8)$来说，如果全局处理后的图像对数均值较低，那么公式的 $log(\frac{L_g(x,y)}{H_g(x,y)}+\beta)$ 这部分，将从一个值较低、梯度较大的部分开始，所以亮度提升会比对数均值较高的图像更加明显。</p>
+<h2 id="2-4-代码分析-amp-实验结果"><a href="#2-4-代码分析-amp-实验结果" class="headerlink" title="2.4 代码分析&amp;实验结果"></a>2.4 代码分析&amp;实验结果</h2><p>文章的实验结果不再赘述，主要说自己的实验结果，并分析作者的代码。</p>
+<p>在包含两个影响因子前后：</p>
+<p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/global%20with%20local%20without%20alpha%20%26%20beta.jpg" alt="without alpha &amp; beta"><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/global%20with%20local%20with%20alpha%20%26%20beta%20%26%20colorbalance.jpg" alt="with alpha &amp; beta"></p>
+<p>控制变量：</p>
+<p>只包含$\alpha$，分别取$\eta=0,18,36,72,3600$：</p>
+<p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/eta%3D0.jpg" alt="eat = 0"><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/eta%3D18.jpg" alt="eat = 18"></p>
+<p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/eta%3D36.jpg" alt="eat = 36"><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/eta%3D72.jpg" alt="eat = 72"></p>
+<p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/eta%3D3600.jpg" alt="eat = 3600"></p>
+<p>只包含$\beta$，分别取$\lambda=0,5,10,20,1000$：</p>
+<p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/lambda%3D0.jpg" alt="lambda = 0"><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/lambda%3D5.jpg" alt="lambda = 5"></p>
+<p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/lambda%3D10.jpg" alt="lambda = 10"><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/lambda%3D20.jpg" alt="lambda = 20"></p>
+<p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/lambda%3D1000.jpg" alt="lambda = 1000"></p>
+<p>另外，经过对代码的分析，我发现在代码中有一个关键函数：</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SimplestColorBalance(im_orig, satLevel1, satLevel2, num)</span><br></pre></td></tr></table></figure>
+
+<p>在使用这个函数前后，成像效果有极大的差别：</p>
+<p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/global%20with%20local%20with%20alpha%20%26%20beta%20without%20colorbalance.jpg" alt="without colorbalance"><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/global%20with%20local%20with%20alpha%20%26%20beta%20%26%20colorbalance.jpg" alt="with colorbalance"></p>
+<p><strong>所以认为在论文中未提到的这个函数同样具有及其重要的作用。</strong></p>
+<p>作者在代码中还进行了将图像转化为HSV格式后，改变V值提升亮度的操作，对于某些场景(感觉上偏向暖色调)来说，色调变化会较大，显得不自然。我认为这样的调整更适合于冷色调的场景。</p>
+<p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/change%20to%20HSV.jpg" alt="change to HSV"></p>
+<h2 id="2-5-总结"><a href="#2-5-总结" class="headerlink" title="2.5 总结"></a>2.5 总结</h2><p>这篇文章是2013年的，现在看来思路传统：基于Retinex的核心公式进行改进。改进思路大致是引入影响因子，对原式进行平移和倍数的改变。在进行调整的过程中，以更好的色彩对比度和自适应能力为调整方向。不管是全局适应还是局部适应，中心逻辑即：针对不同亮度的部分有不同的处理效果。如果是全局适应，那么调整函数，使得在高亮的部分斜率降低，减弱亮度增强效果；如果是局部适应，那么在同一幅画面中，根据临近像素点的关系和输入图像的整体亮度情况来进行函数调整。</p>
+<p>一些常见的处理：</p>
+<ol>
+<li><p>表示亮度的方式(节选文章代码)：</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Lw = <span class="number">0.299</span> * Ir + <span class="number">0.587</span> * Ig + <span class="number">0.114</span> * Ib;</span><br></pre></td></tr></table></figure>
+
+<p>通过灰度来表示像素点亮度，分别对三通道的值加权处理即可，权值由实验得，是个定值。</p>
+</li>
+<li><p>将像素值从整数转化为双精度小数，有利于计算的精确性。</p>
+</li>
+<li><p>对于文章中所做的取对数操作，最后需要进行反对数运算。或者如文章中一样，取输入和最终输出的比值作为gain值(增益)处理。</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gain = Lout ./ Lw;</span><br><span class="line">gain(<span class="built_in">find</span>(Lw == <span class="number">0</span>)) = <span class="number">0</span>;</span><br><span class="line">outval = <span class="built_in">cat</span>(<span class="number">3</span>, gain .* Ir, gain .* Ig, gain .* Ib);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>感觉可以改进的方向：</p>
+<p>对于经验参数的确定。文章中是根据人工调整的方式来对参数进行调整的，但是根据我在用不同场景的图片进行实验的过程中发现，作者得出的最佳经验参数值不是适用于所有不同场景的图像。所以经验参数或许有更智能的调整方式。</p>
+<h1 id="3-曝光融合-Exposure-Fusion"><a href="#3-曝光融合-Exposure-Fusion" class="headerlink" title="3.曝光融合(Exposure Fusion)"></a>3.曝光融合(Exposure Fusion)</h1><p>曝光融合即：将多张不同曝光的图像进行融合，以达到在一张图像中呈现亮暗各处细节的目的。</p>
+<p>经典曝光函数为：<br>$$<br>R(x,y)=\sum^N_{k=1}W_k(x,y)I_k(x,y) \tag{3-1}<br>$$<br>其中$R(x,y)$为输出图像坐标$x,y$处像素点的值。$k$表示第$k$张曝光图像，$W_k(x,y)$表示第$k$张图像坐标$x,y$处像素点的权重，$I_k(x,y)$表示第$k$张图像坐标$x,y$处像素点的值。在曝光融合的研究中，大部分文章都是对$W_k(x,y)$的取值进行确定，可参考论文<a target="_blank" rel="noopener" href="https://mericam.github.io/papers/exposure_fusion_reduced.pdf">Exposure Fusion</a>。</p>
+<h1 id="4-去鬼影-Deghosting"><a href="#4-去鬼影-Deghosting" class="headerlink" title="4.去鬼影(Deghosting)"></a>4.去鬼影(Deghosting)</h1><h2 id="4-1-概述"><a href="#4-1-概述" class="headerlink" title="4.1 概述"></a>4.1 概述</h2><p>在曝光融合的过程中，不同曝光的图像往往难以保持场景一致、场景中的物体无位移。当场景产生移动时就需要对图像先进行配准；场景中的物体产生位移时则需要进行去鬼影操作。对去鬼影的流程总结如下：</p>
+<p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/%E5%8E%BB%E9%AC%BC%E5%BD%B1%E6%8A%80%E6%9C%AF%E8%B7%AF%E7%BA%BF.png" alt="去鬼影技术路线"></p>
+<p>如图，在去鬼影前一定要先进行图像配准。在最近的研究中，去鬼影主要有两种路线：</p>
+<ol>
+<li>默认场景中的物体没有太大的位移，顺序输入图像，比对像素差异，判定像素点是否移动，对移动像素点进行处理，最终得到无鬼影的图像。</li>
+<li>在曝光栈中选取一张参考图像，以这张参考图像为基准调整其他曝光图像，最终合成无鬼影的图像。</li>
+</ol>
+<p>路线一有个普遍的问题：无法处理物体位移较大的情况。而路线二可以解决这个问题。路线二的问题在于只能以参考图像作为标准，会损失其他图像的信息，如何选取参考图像是个问题。</p>
+<h2 id="4-2-Motion-free-exposure-fusion-based-on-inter-consistency-and-intra-consistency"><a href="#4-2-Motion-free-exposure-fusion-based-on-inter-consistency-and-intra-consistency" class="headerlink" title="4.2 Motion-free exposure fusion based on inter-consistency and intra-consistency"></a>4.2 Motion-free exposure fusion based on inter-consistency and intra-consistency</h2><p>这里主要讲解这段时间看的一篇论文：<a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/abs/pii/S002002551631235X">Motion-free exposure fusion based on inter-consistency and intra-consistency</a>。</p>
+<p>这篇文章默认已经进行了配准操作。主要提了两个关键概念：</p>
+<ol>
+<li><p>inter-consistency：</p>
+<p>inter：不同事物之间，输入的不同曝光度图像之间。描述了<strong>不同曝光下相同位置</strong>的像素一致性。</p>
+</li>
+<li><p>intra-consistency：</p>
+<p>intra：同一事物内部各部分之间，一张图像中各像素之间。描述了<strong>同一曝光下相邻像素</strong>之间的一致性。</p>
+</li>
+</ol>
+<p>文章整体逻辑如下：</p>
+<p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/26%E5%8E%BB%E9%AC%BC%E5%BD%B1%E6%96%87%E7%AB%A0%E6%95%B4%E4%BD%93%E9%80%BB%E8%BE%91.png" alt="整体逻辑"></p>
+<p>其中，去鬼影部分流程如下：</p>
+<p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/deghosting.png" alt="deghosting"></p>
+<p>如上图所示，主要分为两个部分：</p>
+<ol>
+<li><p>在曝光栈中选取参考图像，用直方图匹配进行图像归一化处理。保留参考图像的影像，其他各曝光图像的曝光，得到归一化图像。在直方图匹配的过程中选用幂函数作为匹配函数效果最佳。</p>
+</li>
+<li><p>利用图像分割划分超像素，在超像素级别对运动目标进行检测。利用公式：<br>$$<br>I_i^L(x,y)=\omega_i(x,y)\bar{I^r_i}(x,y)+(1-\omega_i(x,y))I_i(x,y) \tag{4-1}<br>$$<br>其中$\omega_i(x,y)$为二进制掩码值，作用是判定该点是应该保留 $\bar{I^r_i}(x,y)$ 的像素还是 $I_i(x,y)$ 的像素。当判定为运动像素时$\omega_i(x,y)$取值为1，保留 $\bar{I^r_i}$ 的像素；反之保留 $I_i(x,y)$ 的像素。为了使得变化更均匀，用高斯函数将 $\omega_i(x,y)$ 的取值映射到 $(0,1)$ 的区间内。</p>
+<p><strong>判断是否为运动像素的标准为：超像素中超过5%的像素大于阈值 $\tau$ 。(感觉这里时比较关键的点，但是作者没有说得很清楚，到底是像素的什么值大于阈值 $\tau$ )</strong></p>
+</li>
+</ol>
+<p>在鬼影去除后，通过得到的潜像进行曝光融合，这里是引用的其他文章的曝光融合方法。</p>
+<h2 id="4-3-总结"><a href="#4-3-总结" class="headerlink" title="4.3 总结"></a>4.3 总结</h2><p>文章整体结构清晰，思路并不复杂。有一下几个深挖点：</p>
+<ol>
+<li>超像素的划分：每张图像分开划分然后重叠，还是先重叠再划分？如果是分开划分如何划分得一样？</li>
+<li>直方图匹配在这里面起到了什么作用，不用直方图匹配，只用幂函数进行映射行不行？</li>
+<li>参考文章中选取参考图像的方法主要是由人工进行选择，根据个人想保留的动作镜头选取；如果图像意义相同，那么将会自动选取饱和像素最少的图像作为参考图像。有没有更好的选取参考图像的方式？</li>
+</ol>
+<h1 id="5-规划"><a href="#5-规划" class="headerlink" title="5. 规划"></a>5. 规划</h1><p>未来主要深入看去鬼影方面。尽量找到代码。以提问——猜想——实验——总结的方式进行学习。</p>
+<h1 id="参考文献："><a href="#参考文献：" class="headerlink" title="参考文献："></a>参考文献：</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/21983679">[1] Tone Mapping进化论</a></p>
+<p><a target="_blank" rel="noopener" href="https://koasas.kaist.ac.kr/bitstream/10203/172985/1/73275.pdf">[2] Adaptive Local Tone Mapping Based on Retinex for High Dynamic Range Images</a></p>
+<p><a href="%5B%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%5D%E4%B8%80%E7%A7%8D%E4%BD%8E%E5%85%89%E7%85%A7%E5%9B%BE%E5%83%8F%E7%9A%84%E4%BA%AE%E5%BA%A6%E6%8F%90%E5%8D%87%E6%96%B9%E6%B3%95">[3]【图像处理】一种低光照图像的亮度提升方法</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lz0499/article/details/81154937">[4] Retinex图像增强算法</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.semanticscholar.org/paper/Lightness-and-retinex-theory.-Land-McCann/a2f9c78b094ccd50cbb175193d2993735d39c6a6">[5] Lightness and Retinex theory</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.pnas.org/content/pnas/83/10/3078.full.pdf">[6] An alternative technique for the computation of the designator in the retinex theory of color vision</a></p>
+<p><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/557356">[7] Properties and performance of a center/surround retinex</a></p>
+<p><a target="_blank" rel="noopener" href="https://mericam.github.io/papers/exposure_fusion_reduced.pdf">[8] Exposure Fusion</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/abs/pii/S002002551631235X">[9] Motion-free exposure fusion based on inter-consistency and intra-consistency</a></p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">KFlun</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://kflun.com/2020/11/25/高动态范围-HDR-算法学习笔记-2020-11-25/">https://kflun.com/2020/11/25/高动态范围-HDR-算法学习笔记-2020-11-25/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/HDR/">HDR</a></div><nav id="pagination"><div class="next-post pull-right"><a href="/2020/11/19/Mac%E4%B8%8BHexo-GitHub%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E8%B8%A9%E5%9D%91%E5%AE%9E%E5%BD%95/"><span>Mac下Hexo+GitHub博客搭建踩坑实录</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/76d90db83oa01e9ae7e782a1d67cbee1.JPEG)"><div class="layout" id="footer"><div class="copyright">&copy;2020 By KFlun</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>
