@@ -134,7 +134,7 @@
 <h2 id="24-代码分析"><a class="markdownIt-Anchor" href="#24-代码分析"></a> 2.4 代码分析</h2>
 <p>SimplestColorBalance()函数：</p>
 <figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SimplestColorBalance(im_orig, satLevel1, satLevel2, num)</span><br></pre></td></tr></table></figure>
-<p>主要所用为将图像像素值压缩至[0,1]范围(里面还做了个直方图均衡)。实现效果比直接除以最大值压缩好一点，下图左图为直接除以最大值，右图为SimplestColorBalance()函数处理结果：</p>
+<p>主要作用为将图像像素值压缩至[0,1]范围(里面还做了个直方图均衡)。实现效果比直接除以最大值压缩好一点，下图左图为直接除以最大值，右图为SimplestColorBalance()函数处理结果：</p>
 <p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/2020/Max%20vs%20CBL.png" alt="压缩方式对比" /></p>
 <p>在最后，作者在代码中还进行了将图像转化为HSV格式后，改变V值提升亮度的操作。对于某些场景(偏向暖色调)来说，色调变化会较大，显得不自然。我认为这样的调整更适合于冷色调的场景。</p>
 <p><img src="https://kflun-1304261895.cos.ap-chongqing.myqcloud.com/uPic/%E9%AB%98%E5%8A%A8%E6%80%81%E8%8C%83%E5%9B%B4(HDR)%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0(%E4%B8%80)/2020/HSV.png" alt="change to HSV" /></p>
